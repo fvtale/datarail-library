@@ -1,0 +1,11 @@
+# Build output. Published into datarail-site by CI and never committed here:
+# it can hold details read from private repositories, and this one is public.
+dist/
+
+node_modules/
+.DS_Store
+Thumbs.db
+
+# Deploy keys, in case one is ever generated inside the checkout by mistake.
+*-deploy
+*-deploy.pub

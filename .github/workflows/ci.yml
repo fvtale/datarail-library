@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  # Mondays at 08:23 UTC: request every listed path from the live site. The
+  # page tells visitors that a 404 in the library is a bug, and this is what
+  # keeps that promise without anyone clicking through it by hand.
+  schedule:
+    - cron: '23 8 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+
+      - name: Validate library.json and repos.json
+        run: node scripts/check.mjs
+
+      - name: Syntax-check every module and script
+        run: for f in site/js/*.js scripts/*.mjs; do node --check "$f"; done
+
+      - name: Build without network
+        run: node scripts/build.mjs --offline
+
+  links:
+    # Depends on the network and the live site rather than on the code, so it
+    # runs on its own schedule instead of failing ordinary pushes whenever the
+    # site has a bad moment.
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+
+      - name: Request every listed path from datarail.org
+        run: node scripts/check.mjs --live

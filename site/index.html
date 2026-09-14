@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+  Source: github.com/fvtale/datarail-library (site/index.html).
+  Published into datarail-site/public/library by CI. Anything edited in
+  datarail-site directly is overwritten on the next publish.
+-->
+<!-- @build -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Library — everything on datarail.org</title>
+<meta name="description" content="Every page on datarail.org in one searchable library: DataRail itself, the software projects, the city guides, and the sites built for other people.">
+<meta name="color-scheme" content="dark">
+<link rel="stylesheet" href="/assets/circuit.css">
+
+<style>
+/* ============================================================
+   House palette, no --circuit-* overrides: same rails as /events.
+   The page is a shell. Everything below the toolbar is rendered
+   from library.json by the modules in js/.
+   ============================================================ */
+:root {
+  --bg: #05070b;
+  --bg-soft: #0b0f16;
+  --bg-raised: #10151e;
+  --fg: #f5f5f7;
+  --muted: #9ca3af;
+  --dim: #7d8694;
+
+  --accent: #42f5ff;
+  --accent-strong: #42ffb3;
+  --warm: #e0b25c;
+  --bad: #ff8098;
+  --line: #1c232f;
+
+  --font-main: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  --radius: 10px;
+  --fast: 150ms ease-out;
+  --shell: 980px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: var(--font-main);
+  background: radial-gradient(circle at 50% -6%, #0d1622 0, var(--bg) 58%, #03050a 100%);
+  background-attachment: fixed;
+  color: var(--fg);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; }
+h1, h2 { margin: 0; line-height: 1.14; font-weight: 600; letter-spacing: -0.02em; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 5px; }
+
+.shell { max-width: var(--shell); margin: 0 auto; padding: 0 20px; }
+.label {
+  font-family: var(--font-mono); font-size: 0.67rem;
+  text-transform: uppercase; letter-spacing: 0.18em; color: var(--dim);
+}
+.skip-link {
+  position: absolute; left: -9999px; top: 0; z-index: 60;
+  background: var(--accent); color: #05070b; padding: 10px 16px;
+  font-weight: 600; text-decoration: none;
+}
+.skip-link:focus { left: 8px; top: 8px; }
+
+/* ---------- Header ---------- */
+.site-header {
+  position: sticky; top: 0; z-index: 40;
+  background: rgba(5, 7, 11, 0.9);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--line);
+}
+.header-inner {
+  max-width: var(--shell); margin: 0 auto; padding: 11px 20px;
+  display: flex; align-items: center; gap: 12px;
+}
+.brand { display: flex; align-items: center; gap: 9px; margin-right: auto; text-decoration: none; }
+.brand-dot {
+  width: 9px; height: 9px; border-radius: 50%; flex: none;
+  background: var(--accent); box-shadow: 0 0 9px var(--accent);
+}
+.brand-text { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; }
+.brand-text b { color: var(--accent); font-weight: 600; }
+.header-nav { display: flex; gap: 16px; font-size: 0.84rem; }
+.header-nav a { color: var(--muted); text-decoration: none; transition: color var(--fast); }
+.header-nav a:hover { color: var(--fg); }
+
+/* ---------- Hero ---------- */
+.hero { padding: 42px 0 22px; }
+.hero h1 { font-size: clamp(1.8rem, 5vw, 2.6rem); margin: 11px 0 13px; max-width: 20ch; }
+.hero p { margin: 0; color: var(--muted); max-width: 62ch; }
+
+/* ---------- Toolbar ---------- */
+.toolbar {
+  position: sticky; top: 51px; z-index: 20;
+  background: rgba(5, 7, 11, 0.94);
+  backdrop-filter: blur(14px);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 13px 0;
+}
+.toolbar-inner { max-width: var(--shell); margin: 0 auto; padding: 0 20px; }
+.searchwrap { position: relative; }
+.searchwrap input {
+  font: inherit; font-size: 0.95rem; width: 100%;
+  color: var(--fg); background: var(--bg-soft);
+  border: 1px solid var(--line); border-radius: 999px;
+  padding: 10px 16px 10px 40px;
+}
+.searchwrap input::placeholder { color: var(--dim); }
+.searchwrap input:focus { border-color: var(--accent); outline: none; }
+.searchwrap svg {
+  position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+  width: 15px; height: 15px; fill: none; stroke: var(--dim); stroke-width: 2;
+  pointer-events: none;
+}
+.searchwrap .kbd {
+  position: absolute; right: 13px; top: 50%; transform: translateY(-50%);
+  font-family: var(--font-mono); font-size: 0.66rem; color: var(--dim);
+  border: 1px solid var(--line); border-radius: 4px; padding: 1px 6px;
+  pointer-events: none;
+}
+@media (max-width: 560px) { .searchwrap .kbd { display: none; } }
+
+.chips { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 11px; align-items: center; }
+.chip {
+  font: inherit; font-size: 0.8rem; cursor: pointer;
+  color: var(--muted); background: transparent;
+  border: 1px solid var(--line); border-radius: 999px; padding: 5px 13px;
+  transition: border-color var(--fast), color var(--fast), background var(--fast);
+}
+.chip:hover { color: var(--fg); border-color: var(--dim); }
+.chip[aria-pressed="true"] {
+  color: #05070b; background: var(--accent); border-color: var(--accent); font-weight: 600;
+}
+.count {
+  margin-left: auto; font-family: var(--font-mono); font-size: 0.68rem;
+  color: var(--dim); white-space: nowrap; order: 99;
+}
+
+/* ---------- Groups ---------- */
+.lib-group { padding: 34px 0 4px; }
+.sec-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 6px; }
+.sec-head h2 { font-size: 1.14rem; }
+.sec-head .n {
+  font-family: var(--font-mono); font-size: 0.68rem; color: var(--dim);
+  margin-left: auto; white-space: nowrap;
+}
+.sec-note { margin: 0 0 14px; color: var(--dim); font-size: 0.87rem; max-width: 62ch; }
+
+/* ---------- Entries ---------- */
+.entries { display: grid; gap: 1px; }
+.entry-wrap { border-top: 1px solid var(--line); }
+.entries .entry-wrap:last-child { border-bottom: 1px solid var(--line); }
+
+.entry {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto;
+  gap: 4px 18px; align-items: baseline;
+  padding: 15px 12px; margin: 0 -12px;
+  text-decoration: none; border-radius: 8px;
+  position: relative; isolation: isolate;
+  transition: background var(--fast);
+}
+.entry:hover { background: var(--bg-soft); }
+
+/* Bloom: highlighting a row glows it in whatever colour the rails are
+   running. --circuit-echo is the token meant for this: circuit.js keeps
+   cherry out of it, because a red glow next to a healthy link reads as an
+   error rather than emphasis. Keyboard focus blooms too; hover-only would
+   leave anyone tabbing through with no idea which row they were on. */
+.entry::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  border-radius: 8px; pointer-events: none;
+  background: radial-gradient(140% 160% at 0% 50%,
+    color-mix(in srgb, var(--circuit-echo, var(--accent)) 20%, transparent),
+    transparent 64%);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--circuit-echo, var(--accent)) 34%, transparent),
+    0 0 28px -8px color-mix(in srgb, var(--circuit-echo, var(--accent)) 50%, transparent);
+  opacity: 0; transition: opacity var(--fast);
+}
+.entry:hover::before, .entry:focus-visible::before {
+  opacity: 1; animation: entryBloom 2.4s ease-in-out infinite;
+}
+/* The pulse is the animation; the bloom is the opacity above. Under reduced
+   motion the animation drops and the bloom simply holds. */
+@keyframes entryBloom { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+.entry:hover .entry-title, .entry:focus-visible .entry-title { color: var(--circuit-echo, var(--accent)); }
+
+.entry-title { font-size: 1rem; font-weight: 600; transition: color var(--fast); }
+.entry-title .tag {
+  display: inline-block; margin-left: 9px; vertical-align: 1px;
+  font-family: var(--font-mono); font-size: 0.56rem; font-weight: 500;
+  text-transform: uppercase; letter-spacing: 0.12em;
+  border: 1px solid var(--line); border-radius: 3px; padding: 2px 7px; color: var(--dim);
+}
+.entry-title .tag.live { border-color: var(--accent-strong); color: var(--accent-strong); }
+.entry-title .tag.warn { border-color: var(--warm); color: var(--warm); }
+.entry-desc { grid-column: 1; margin: 3px 0 0; color: var(--muted); font-size: 0.89rem; }
+.entry-path {
+  grid-row: 1; grid-column: 2;
+  font-family: var(--font-mono); font-size: 0.76rem; color: var(--dim); white-space: nowrap;
+}
+@media (max-width: 620px) {
+  .entry { grid-template-columns: minmax(0, 1fr); }
+  .entry-path { grid-row: auto; grid-column: 1; margin-top: 4px; white-space: normal; overflow-wrap: anywhere; }
+}
+
+/* Sub-pages and GitHub links sit outside the row's anchor: nesting <a>
+   inside <a> is invalid and browsers unnest it, which breaks both links. */
+.sublinks { display: flex; flex-wrap: wrap; gap: 7px; padding: 0 0 14px; }
+.sublinks a {
+  font-family: var(--font-mono); font-size: 0.7rem; color: var(--muted);
+  border: 1px solid var(--line); border-radius: 999px; padding: 4px 11px;
+  text-decoration: none; transition: border-color var(--fast), color var(--fast);
+}
+.sublinks a:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ---------- GitHub details ----------
+   From repos.generated.json, the snapshot CI takes when it builds. These
+   are plain text inside the row; the links to GitHub are in .sublinks. */
+.repo {
+  grid-column: 1; display: flex; flex-wrap: wrap; align-items: center;
+  gap: 5px 13px; margin-top: 9px;
+  font-family: var(--font-mono); font-size: 0.68rem; color: var(--dim);
+}
+.repo .gh { color: var(--muted); }
+.repo .lang::before {
+  content: ""; display: inline-block; width: 7px; height: 7px; margin-right: 6px;
+  border-radius: 50%; background: var(--accent);
+}
+.repo .badge {
+  font-size: 0.56rem; text-transform: uppercase; letter-spacing: 0.12em;
+  border: 1px solid var(--line); border-radius: 3px; padding: 1px 6px;
+}
+.repo .badge.pass { border-color: var(--accent-strong); color: var(--accent-strong); }
+.repo .badge.fail { border-color: var(--bad); color: var(--bad); }
+.repo .badge.run  { border-color: var(--warm); color: var(--warm); }
+
+mark {
+  background: color-mix(in srgb, var(--accent) 26%, transparent);
+  color: inherit; border-radius: 2px; padding: 0 1px;
+}
+
+/* ---------- States ---------- */
+.lib-empty, .lib-error {
+  border: 1px dashed var(--line); border-radius: var(--radius);
+  background: var(--bg-soft); padding: 30px 24px; text-align: center;
+  color: var(--muted); margin-top: 34px;
+}
+.lib-empty p, .lib-error p { margin: 0 0 14px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
+  padding: 10px 20px; border-radius: 999px; background: transparent;
+  border: 1px solid var(--accent); color: var(--accent); font: inherit;
+  font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em;
+  text-transform: uppercase; text-decoration: none;
+  transition: background var(--fast), color var(--fast);
+}
+.btn:hover { background: var(--accent); color: #05070b; }
+
+.note {
+  border: 1px solid var(--line); border-left: 3px solid var(--dim);
+  border-radius: var(--radius); background: var(--bg-soft);
+  padding: 15px 17px; font-size: 0.86rem; color: var(--muted); margin: 34px 0 0;
+}
+.note strong { color: var(--fg); }
+.note code {
+  font-family: var(--font-mono); font-size: 0.85em; color: var(--accent);
+  background: rgba(66,245,255,0.09); padding: 1px 5px; border-radius: 3px;
+}
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* ---------- Footer ---------- */
+.site-footer { border-top: 1px solid var(--line); background: var(--bg-soft); padding: 26px 0 34px; margin-top: 42px; }
+.footer-inner { display: flex; gap: 14px 24px; flex-wrap: wrap; align-items: baseline; }
+.footer-inner a { color: var(--muted); text-decoration: none; }
+.footer-inner a:hover { color: var(--accent); }
+.footer-note { width: 100%; margin: 10px 0 0; font-size: 0.79rem; color: var(--dim); max-width: 78ch; }
+.footer-note code { font-family: var(--font-mono); font-size: 0.9em; }
+
+/* The plain list shown with JavaScript off, and again if the modules fail to
+   load. Both copies are generated from library.json at build time. */
+.fallback {
+  border: 1px solid var(--warm); border-radius: var(--radius);
+  background: var(--bg-soft); padding: 20px 22px; margin-top: 30px;
+}
+.fallback p { margin: 0 0 12px; color: var(--muted); font-size: 0.9rem; }
+.fallback strong { color: var(--fg); }
+.fallback ul { margin: 0; padding-left: 20px; columns: 2; column-gap: 26px; }
+.fallback li { color: var(--muted); font-size: 0.88rem; margin-bottom: 4px; }
+@media (max-width: 520px) { .fallback ul { columns: 1; } }
+
+/* The toolbar has nothing to filter until the data arrives, and with
+   JavaScript off it can never work at all, so it stays hidden until
+   main.js reveals it. */
+.toolbar[hidden] { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
+</head>
+
+<body>
+<a class="skip-link" href="#libSearch">Skip to search</a>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/">
+      <span class="brand-dot" aria-hidden="true"></span>
+      <span class="brand-text">DataRail <b>Library</b></span>
+    </a>
+    <nav class="header-nav" aria-label="Site">
+      <a href="/">Home</a>
+      <a href="/consult/">Consulting</a>
+      <a href="/events">Events</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <div class="shell">
+    <section class="hero">
+      <p class="label">Library</p>
+      <h1>Everything on datarail.org.</h1>
+      <p>
+        The whole site in one place. Search it, or filter by what kind of thing it is.
+        Paths are shown because people type them.
+      </p>
+    </section>
+  </div>
+
+  <div class="toolbar" id="libToolbar" hidden>
+    <div class="toolbar-inner">
+      <div class="searchwrap">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>
+        </svg>
+        <label class="sr-only" for="libSearch">Search the library</label>
+        <input id="libSearch" type="search" autocomplete="off" spellcheck="false"
+               placeholder="Search titles, descriptions and paths…">
+        <span class="kbd" aria-hidden="true">/</span>
+      </div>
+      <div class="chips" id="libChips" role="group" aria-label="Filter by group">
+        <span class="count" id="libCount"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="shell">
+    <p class="sr-only" id="libStatus" role="status" aria-live="polite"></p>
+
+    <div id="libShell" hidden>
+      <div id="libGroups"></div>
+
+      <div class="lib-empty" id="libEmpty" hidden>
+        <p>Nothing here matches that.</p>
+        <button class="btn" type="button" id="libClear">Clear filters</button>
+      </div>
+
+      <div class="note">
+        <strong>Three paths redirect rather than serve a page of their own.</strong>
+        <code>/legiongo</code> goes to the Legion Go project, <code>/directory</code> to
+        this page, and <code>/STOP1_NYC.html</code> to the Stop 1 node map. All three are
+        kept so older links stay good; none are counted above.
+      </div>
+    </div>
+
+    <div id="libError"></div>
+
+    <div class="fallback" id="libFallback" hidden>
+      <p>
+        <strong>The interactive library didn't load.</strong> The pages themselves are
+        unaffected — here they all are:
+      </p>
+      <ul>
+          <!-- @page-list -->
+      </ul>
+    </div>
+
+    <noscript>
+      <div class="fallback">
+        <p>
+          <strong>Searching and filtering need JavaScript.</strong> The pages themselves
+          don't — here they all are:
+        </p>
+        <ul>
+          <!-- @page-list -->
+        </ul>
+      </div>
+    </noscript>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="shell footer-inner">
+    <a href="/">datarail.org</a>
+    <a href="/consult/">Consulting</a>
+    <a href="/events">Events</a>
+    <a href="https://github.com/fvtale/datarail-library" target="_blank" rel="noopener noreferrer">Source on GitHub</a>
+    <a href="mailto:contact@datarail.org">contact@datarail.org</a>
+    <p class="footer-note">
+      Generated from <code>library.json</code>, with every count derived rather than typed.
+      If something here 404s, or a page exists that isn't listed, that's a bug worth
+      reporting. &copy; 2026 DataRail.
+    </p>
+  </div>
+</footer>
+
+<script>
+  /* If the modules never ran (a file missing from a partial upload, or a
+     browser without module support) main.js never marks the page as booted.
+     Module scripts always finish or fail before DOMContentLoaded fires, so
+     this can tell for certain, with no timeout to guess at. */
+  document.addEventListener("DOMContentLoaded", function () {
+    if (!document.documentElement.getAttribute("data-library-booted")) {
+      var fallback = document.getElementById("libFallback");
+      if (fallback) fallback.hidden = false;
+    }
+  });
+</script>
+<script type="module" src="js/main.js"></script>
+<script src="/assets/circuit.js" defer></script>
+</body>
+</html>

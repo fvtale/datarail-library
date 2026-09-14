@@ -1,0 +1,16 @@
+{
+  "name": "datarail-library",
+  "version": "0.1.0",
+  "private": true,
+  "description": "The Library at datarail.org/library: an index of the site, and a window onto the GitHub projects behind it.",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "check": "node scripts/check.mjs",
+    "links": "node scripts/check.mjs --live",
+    "build": "node scripts/build.mjs",
+    "serve": "node scripts/build.mjs --offline && node scripts/serve.mjs"
+  }
+}

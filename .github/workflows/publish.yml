@@ -1,0 +1,95 @@
+name: Publish to datarail.org
+
+# Builds the library, reading GitHub for the repositories listed in
+# data/repos.json, and copies the result into datarail-site/public/library.
+# datarail-site's own deploy workflow then ships it to IONOS on push. This
+# repository never touches the web server or its credentials.
+#
+# Off until the repository variable PUBLISH_TO_SITE is set to true and the
+# DATARAIL_SITE_DEPLOY_KEY secret holds the private half of a write deploy key
+# on fvtale/datarail-site. Every run still builds in the meantime, so a broken
+# library or an unreadable repository shows up red before it could ship.
+#
+# A deploy key rather than a token, for two reasons. It is scoped to one
+# repository by construction and never expires, so the library cannot go
+# quietly stale months from now while this keeps building green. And a push
+# made with it triggers datarail-site's deploy, which a push made with
+# GITHUB_TOKEN would not.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'site/**'
+      - 'data/**'
+      - 'scripts/**'
+      - '.github/workflows/publish.yml'
+  # Daily, so last-push times and CI status on the page stay current when
+  # nothing in this repository changes. An unchanged snapshot builds to
+  # identical files and commits nothing.
+  schedule:
+    - cron: '41 9 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: library-publish
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the library
+        uses: actions/checkout@v5
+        with:
+          path: library
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+
+      - name: Build
+        working-directory: library
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Only needed to list a private repository. The workflow's own token
+          # cannot see anything outside this repository.
+          LIBRARY_READ_TOKEN: ${{ secrets.LIBRARY_READ_TOKEN }}
+        run: node scripts/build.mjs
+
+      - name: Publishing is switched off
+        if: vars.PUBLISH_TO_SITE != 'true'
+        run: echo "::notice title=Built, not published::Set the PUBLISH_TO_SITE variable to true and add the DATARAIL_SITE_DEPLOY_KEY secret to copy this into datarail-site."
+
+      - name: Check out the site
+        if: vars.PUBLISH_TO_SITE == 'true'
+        uses: actions/checkout@v5
+        with:
+          repository: fvtale/datarail-site
+          ssh-key: ${{ secrets.DATARAIL_SITE_DEPLOY_KEY }}
+          path: site
+
+      - name: Copy the build into place
+        if: vars.PUBLISH_TO_SITE == 'true'
+        run: rsync -a --delete library/dist/ site/public/library/
+
+      - name: Commit to the site
+        if: vars.PUBLISH_TO_SITE == 'true'
+        working-directory: site
+        run: |
+          # status, not diff: diff cannot see files that are new to the folder.
+          if [ -z "$(git status --porcelain -- public/library)" ]; then
+            echo "site already matches, nothing to push"
+            exit 0
+          fi
+          git config user.name  "datarail-library"
+          git config user.email "contact@datarail.org"
+          git add public/library
+          git commit -m "Update the library (datarail-library@${GITHUB_SHA::12})"
+          # The events feed, Glyph and the receptionist push to this repository
+          # too. Rebase rather than force.
+          git pull --rebase origin main
+          git push origin HEAD:main
