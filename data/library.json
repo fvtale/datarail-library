@@ -43,7 +43,7 @@
     "GitHub details are not set here. List the repository in data/repos.json",
     "with \"entry\" pointing at the entry's path.",
     "",
-    "Redirect stubs are deliberately not entries. /legiongo, /directory and",
+    "Redirect stubs are deliberately not entries. /legiongo, /DAW, /directory and",
     "/STOP1_NYC.html all forward somewhere and are named in the footnote in",
     "site/index.html instead."
   ],
@@ -204,6 +204,17 @@
         "text": "Design notes"
       },
       "keywords": "game stealth noir flipper design document"
+    },
+    {
+      "title": "Violin Cortex Console",
+      "path": "/violin/",
+      "group": "projects",
+      "desc": "A touchscreen DAW built around an electric violin and a Neural DSP Nano Cortex: linked recordings, a sample-accurate looper, a tuner that reads the dry signal, and lessons that score what you play.",
+      "tag": {
+        "text": "In development",
+        "kind": "warn"
+      },
+      "keywords": "daw violin electric ns design wav-4 neural dsp nano cortex looper loop tuner lessons recording audio music practice legion go touchscreen"
     },
     {
       "title": "Travel",
