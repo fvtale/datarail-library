@@ -124,6 +124,17 @@
       "keywords": "nightlife clubs edm techno listings gigs tonight"
     },
     {
+      "title": "Movies",
+      "path": "/movies",
+      "group": "datarail",
+      "desc": "Film reviews, every one written by a person, with the movie's own data laid out beside it. Plus the pop-up screening calendar.",
+      "tag": {
+        "text": "Human written",
+        "kind": "live"
+      },
+      "keywords": "film cinema reviews criticism screenings popup reel"
+    },
+    {
       "title": "Sponsors",
       "path": "/sponsors.html",
       "group": "datarail",
