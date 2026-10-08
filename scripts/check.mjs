@@ -39,7 +39,7 @@ report("repos.json", validateRepos(repos, lib.paths));
 
 const entryCount = Array.isArray(library.entries) ? library.entries.length : 0;
 const repoCount = Array.isArray(repos.repos) ? repos.repos.length : 0;
-console.log(`  ${entryCount} entries, ${repoCount} repositories`);
+console.log(`  ${entryCount} entries, ${repoCount} repositories, ${lib.apps.size} grantable apps`);
 
 if (live && !failed) {
   const targets = new Set();

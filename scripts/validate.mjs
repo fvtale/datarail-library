@@ -14,6 +14,7 @@ export function validateLibrary(lib) {
   const errors = [];
   const warnings = [];
   const paths = new Set();
+  const apps = new Set();
 
   if (!lib || typeof lib !== "object") {
     return { errors: ["the file is not a JSON object"], warnings, paths };
@@ -84,6 +85,35 @@ export function validateLibrary(lib) {
       }
     }
 
+    /* Grantable apps. An entry carrying an "app" id can be granted to an
+       account by an admin, and that id is what the grant stores, so it has to
+       outlive a path change rather than being derived from one. */
+    if (entry.app !== undefined) {
+      if (typeof entry.app !== "string" || !SLUG.test(entry.app)) {
+        errors.push(`${at}: app must be a lowercase slug`);
+      } else if (apps.has(entry.app)) {
+        errors.push(`${at}: duplicate app id "${entry.app}"`);
+      } else {
+        apps.add(entry.app);
+      }
+    }
+
+    if (entry.member !== undefined) {
+      /* A member-only page with no app id is unreachable: there would be no
+         id for an admin to grant, so nobody could ever be let in. */
+      if (entry.app === undefined) errors.push(`${at}: member needs an app id, or nothing can grant it`);
+      if (!entry.member || typeof entry.member !== "object") {
+        errors.push(`${at}: member must be an object`);
+      } else {
+        if (entry.member.path !== undefined && (typeof entry.member.path !== "string" || !entry.member.path.startsWith("/"))) {
+          errors.push(`${at}: member.path must start with /`);
+        }
+        if (entry.member.label !== undefined && !isText(entry.member.label)) {
+          errors.push(`${at}: member.label must be a non-empty string`);
+        }
+      }
+    }
+
     if (entry.pages !== undefined && !(Number.isInteger(entry.pages) && entry.pages > 0)) {
       errors.push(`${at}: pages must be a positive whole number`);
     }
@@ -92,7 +122,7 @@ export function validateLibrary(lib) {
     }
   });
 
-  return { errors, warnings, paths };
+  return { errors, warnings, paths, apps };
 }
 
 export function validateRepos(file, libraryPaths = new Set()) {

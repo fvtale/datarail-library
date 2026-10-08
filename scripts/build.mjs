@@ -146,6 +146,23 @@ async function main() {
      set off a deploy, every single day for no change at all. */
   await writeFile(new URL("repos.generated.json", dist), JSON.stringify({ repos }));
 
+  /* The grantable-apps whitelist, published beside the index so the storage
+     admin console can offer a list to pick from instead of a free-text box.
+     A free-text box means a typo grants an id nothing recognises, and nothing
+     anywhere reports it. Same no-timestamp rule as above: an unchanged
+     whitelist has to build byte-identical or the daily run commits for
+     nothing. */
+  const apps = library.entries
+    .filter((entry) => typeof entry.app === "string")
+    .map((entry) => ({
+      app: entry.app,
+      title: entry.title,
+      path: entry.path,
+      group: entry.group,
+      ...(entry.member ? { member: entry.member } : {})
+    }));
+  await writeFile(new URL("apps.json", dist), JSON.stringify({ apps }));
+
   /* The plain page list for the no-JavaScript and failed-to-load fallbacks,
      generated from the same data as the page so it cannot drift from it. */
   const esc = (s) =>
