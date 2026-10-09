@@ -32,5 +32,10 @@
     "If any listed repository cannot be read, the build fails and nothing is",
     "published: the live page stays as it was rather than losing rows."
   ],
-  "repos": []
+  "repos": [
+    {
+      "repo": "fvtale/nypizza",
+      "entry": "/NYPizza/"
+    }
+  ]
 }

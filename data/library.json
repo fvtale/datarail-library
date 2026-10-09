@@ -285,6 +285,17 @@
       "keywords": "face paint glitter tattoo fair festival booking heather"
     },
     {
+      "title": "Nuovo York Pizza",
+      "path": "/NYPizza/",
+      "group": "others",
+      "desc": "An East Village pizzeria by NYU, open till 3am, run by a chemical engineer. The menu, the process spec, and a calendar of pop-up DJ nights.",
+      "tag": {
+        "text": "DJ nights",
+        "kind": "live"
+      },
+      "keywords": "pizza slice east village nyu 9th street late night dj party pop-up nuovo york"
+    },
+    {
       "title": "Bertoni Gelato",
       "path": "/gelato/",
       "group": "others",
