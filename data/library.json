@@ -82,7 +82,7 @@
     {
       "id": "others",
       "name": "Built for others",
-      "note": "Sites made for other businesses. One is a concept rather than a commission, and is labelled as such on the page itself."
+      "note": "Sites made for other businesses. Two are concepts rather than commissions, and each says so on the page itself."
     }
   ],
   "entries": [
@@ -326,6 +326,17 @@
         }
       ],
       "keywords": "gelato brooklyn williamsburg ice cream italian spec concept"
+    },
+    {
+      "title": "Chroma",
+      "path": "/nails/",
+      "group": "others",
+      "desc": "A nail studio for north Williamsburg: hands, feet, nine spa pedicure flights, waxing and massage, with a price beside every line. The sheet is a draft and the page says so.",
+      "tag": {
+        "text": "Concept · prices a draft",
+        "kind": "warn"
+      },
+      "keywords": "nails nail salon studio manicure pedicure gel chrome cat eye extensions waxing massage brooklyn williamsburg chroma spa"
     }
   ]
 }
