@@ -254,25 +254,11 @@
       "title": "Travel",
       "path": "/travel/",
       "group": "places",
-      "desc": "The way into the guides below.",
+      "desc": "Every guide in one place — Syracuse, Escanaba, and the stops that follow.",
       "tag": {
         "text": "Hub"
       },
       "keywords": "guides cities hub"
-    },
-    {
-      "title": "Syracuse, New York",
-      "path": "/syracuse/",
-      "group": "places",
-      "desc": "The Salt City: Erie Canal history, Armory Square, Green Lakes, the State Fair, and the snowiest metro in the United States.",
-      "keywords": "new york salt city university orange state fair goudy"
-    },
-    {
-      "title": "St. Vincent de Paul · Escanaba",
-      "path": "/SVDPesky/",
-      "group": "places",
-      "desc": "Neighbours helping neighbours on the shore of Little Bay de Noc, Michigan.",
-      "keywords": "svdp michigan upper peninsula charity community escanaba"
     },
     {
       "title": "DataRail DJ",
