@@ -75,11 +75,6 @@
       "note": "Software built in the open, with honest status on each."
     },
     {
-      "id": "places",
-      "name": "Places",
-      "note": "City guides and place writing — what to see, when to come, and who keeps the lights on."
-    },
-    {
       "id": "others",
       "name": "Built for others",
       "note": "Sites made for other businesses. Two are concepts rather than commissions, and each says so on the page itself."
@@ -127,6 +122,16 @@
         "text": "Node map"
       },
       "keywords": "new york glasses capture map nodes fog of war"
+    },
+    {
+      "title": "Travel",
+      "path": "/travel/",
+      "group": "datarail",
+      "desc": "Every guide in one place — Syracuse, Escanaba, and the stops that follow.",
+      "tag": {
+        "text": "Hub"
+      },
+      "keywords": "guides cities hub"
     },
     {
       "title": "Events",
@@ -249,16 +254,6 @@
         "kind": "warn"
       },
       "keywords": "daw violin electric ns design wav-4 neural dsp nano cortex looper loop tuner lessons recording audio music practice legion go touchscreen"
-    },
-    {
-      "title": "Travel",
-      "path": "/travel/",
-      "group": "places",
-      "desc": "Every guide in one place — Syracuse, Escanaba, and the stops that follow.",
-      "tag": {
-        "text": "Hub"
-      },
-      "keywords": "guides cities hub"
     },
     {
       "title": "DataRail DJ",
