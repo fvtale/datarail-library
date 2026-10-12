@@ -151,6 +151,13 @@
       "keywords": "film cinema reviews criticism screenings popup reel"
     },
     {
+      "title": "Bagel",
+      "path": "/bagel/",
+      "group": "datarail",
+      "desc": "Lo-fi DJ sets at sunrise in New York bagel shops — DataRail brings the decks and the lights, the shop brings a corner and the ovens.",
+      "keywords": "bagel dj sunrise lofi morning nyc manhattan boroughs sets"
+    },
+    {
       "title": "Sponsors",
       "path": "/sponsors.html",
       "group": "datarail",
