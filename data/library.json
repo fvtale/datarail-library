@@ -256,6 +256,17 @@
       "keywords": "daw violin electric ns design wav-4 neural dsp nano cortex looper loop tuner lessons recording audio music practice legion go touchscreen"
     },
     {
+      "title": "GhostSignal",
+      "path": "/ghostsignal/",
+      "group": "projects",
+      "desc": "A cyberpunk audio treasure hunt for Meta AI glasses. A polite AI called HUSH is deleting unlicensed sound from Midtown; find eight hidden transmissions around Bryant Park by ear and rebuild the last broadcast.",
+      "tag": {
+        "text": "In development",
+        "kind": "warn"
+      },
+      "keywords": "ghostsignal ghost signal audio game spatial binaural treasure hunt meta ray-ban glasses wearables bryant park nyc ai hush halloween music soundtrack"
+    },
+    {
       "title": "DataRail DJ",
       "path": "/DJ/",
       "group": "others",
