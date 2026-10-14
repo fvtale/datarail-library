@@ -259,12 +259,12 @@
       "title": "GhostSignal",
       "path": "/ghostsignal/",
       "group": "projects",
-      "desc": "A cyberpunk audio treasure hunt for Meta AI glasses. A polite AI called HUSH is deleting unlicensed sound from Midtown; find eight hidden transmissions around Bryant Park by ear and rebuild the last broadcast.",
+      "desc": "A cyberpunk audio treasure hunt for Meta AI glasses. HUSH, a sound-blocking system that listens to every street, is erasing Midtown; capture eight hidden signals around Bryant Park with your SmartSpecs and rebuild the last broadcast.",
       "tag": {
         "text": "In development",
         "kind": "warn"
       },
-      "keywords": "ghostsignal ghost signal audio game spatial binaural treasure hunt meta ray-ban glasses wearables bryant park nyc ai hush halloween music soundtrack"
+      "keywords": "ghostsignal ghost signal audio game spatial binaural treasure hunt meta ray-ban glasses smartspecs wearables bryant park nyc ai hush pirate radio 93.3 halloween music soundtrack dead channel"
     },
     {
       "title": "DataRail DJ",
