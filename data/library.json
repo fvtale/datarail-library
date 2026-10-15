@@ -75,6 +75,11 @@
       "note": "Software built in the open, with honest status on each."
     },
     {
+      "id": "premium",
+      "name": "Premium apps",
+      "note": "Software included with a DataRail membership. Not sold separately; trials by email."
+    },
+    {
       "id": "others",
       "name": "Built for others",
       "note": "Sites made for other businesses. Two are concepts rather than commissions, and each says so on the page itself."
@@ -265,6 +270,17 @@
         "kind": "warn"
       },
       "keywords": "ghostsignal ghost signal audio game spatial binaural treasure hunt meta ray-ban glasses smartspecs wearables bryant park nyc ai hush pirate radio 93.3 halloween music soundtrack dead channel"
+    },
+    {
+      "title": "Go2 Scaler",
+      "path": "/scaler/",
+      "group": "premium",
+      "desc": "A Windows app for the Legion Go 2 that runs games at a lower resolution and upscales them to the full 1920×1200 OLED, with optional frame generation.",
+      "tag": {
+        "text": "Members · trial by email",
+        "kind": "live"
+      },
+      "keywords": "upscaler upscaling scaling fsr frame generation framegen fps boost handheld legion go 2 lenovo windows app steam games nier integer pixel art oled 120hz membership premium trial"
     },
     {
       "title": "DataRail DJ",
