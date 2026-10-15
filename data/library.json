@@ -275,12 +275,12 @@
       "title": "Go2 Scaler",
       "path": "/scaler/",
       "group": "premium",
-      "desc": "A Windows app for the Legion Go 2 that runs games at a lower resolution and upscales them to the full 1920×1200 OLED, with optional frame generation.",
+      "desc": "A Windows app that runs games at a lower resolution and upscales them to fill the screen, with optional frame generation. Tuned for the Legion Go 2, with profiles for the Legion Go, ROG Ally and Yoga 9 2-in-1.",
       "tag": {
         "text": "Members · trial by email",
         "kind": "live"
       },
-      "keywords": "upscaler upscaling scaling fsr frame generation framegen fps boost handheld legion go 2 lenovo windows app steam games nier integer pixel art oled 120hz membership premium trial"
+      "keywords": "upscaler upscaling scaling fsr frame generation framegen fps boost handheld legion go 2 legion go gen 1 lenovo rog ally ally x asus yoga 9 2-in-1 laptop mouse touchpad windows app steam games nier integer pixel art oled 120hz membership premium trial"
     },
     {
       "title": "DataRail DJ",
