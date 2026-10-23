@@ -230,6 +230,17 @@
       "keywords": "pdf docx word convert converter document offline private free pdf to docx docx to pdf windows exe desktop app download"
     },
     {
+      "title": "Text Swap",
+      "path": "/library/textswap/",
+      "group": "projects",
+      "desc": "Change the text in a PDF, JPG or PNG and keep the original font, size and colour. Runs in the browser, so nothing is uploaded.",
+      "tag": {
+        "text": "Runs in browser",
+        "kind": "live"
+      },
+      "keywords": "pdf image jpg png photo scan edit text replace change words font match matching editor ocr free offline private"
+    },
+    {
       "title": "Trends",
       "path": "/trends/",
       "group": "projects",
