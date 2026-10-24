@@ -1,0 +1,21 @@
+# The Library at datarail.org/library.
+#
+# IONOS sends no Cache-Control of its own, so a file here can be served from a
+# cache for the best part of a day after it changes. For the page that is
+# untidy; for apps.json it is a bug with teeth.
+#
+# apps.json is the grantable-apps whitelist, and the storage service reads it
+# server side to decide whether an app id may be granted at all. A stale copy
+# does not say "I am old", it says the app does not exist -- so an entry marked
+# grantable here would be refused at the console with "the library publishes no
+# app called ..." until the cache let go, and nothing anywhere would explain
+# why.
+#
+# index.html and library.js render library.json and must not drift apart from
+# it, so they revalidate on the same terms. All four are small; this costs a
+# conditional request per visit and nothing when nothing changed.
+<IfModule mod_headers.c>
+  <FilesMatch "\.(html|js|json)$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+</IfModule>
