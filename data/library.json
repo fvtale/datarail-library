@@ -208,6 +208,7 @@
         "text": "Phase 0",
         "kind": "warn"
       },
+      "app": "tandem",
       "keywords": "tandem lenovo wifi direct usb4 mirroring interop"
     },
     {
@@ -247,6 +248,7 @@
       "tag": {
         "text": "Design notes"
       },
+      "app": "last-light-static",
       "keywords": "game stealth noir flipper design document"
     },
     {
@@ -258,6 +260,7 @@
         "text": "In development",
         "kind": "warn"
       },
+      "app": "violin",
       "keywords": "daw violin electric ns design wav-4 neural dsp nano cortex looper loop tuner lessons recording audio music practice legion go touchscreen"
     },
     {
@@ -269,7 +272,20 @@
         "text": "In development",
         "kind": "warn"
       },
+      "app": "ghostsignal",
       "keywords": "ghostsignal ghost signal audio game spatial binaural treasure hunt meta ray-ban glasses smartspecs wearables bryant park nyc ai hush pirate radio 93.3 halloween music soundtrack dead channel"
+    },
+    {
+      "title": "DataRail Storage",
+      "path": "/storage/",
+      "group": "projects",
+      "desc": "Authenticated file storage for datarail.org and the programs that run on it. Sign in to browse your folders; a program presents a scoped key and pulls from one.",
+      "tag": {
+        "text": "Live",
+        "kind": "live"
+      },
+      "app": "storage",
+      "keywords": "files storage upload download account sign in login invite api key scoped private folders vps"
     },
     {
       "title": "Go2 Scaler",
