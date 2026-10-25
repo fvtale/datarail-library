@@ -230,6 +230,22 @@
       "keywords": "pdf docx word convert converter document offline private free pdf to docx docx to pdf windows exe desktop app download"
     },
     {
+      "title": "Trends",
+      "path": "/trends/",
+      "group": "projects",
+      "desc": "Short-form video trends across DataRail's niches, collected from YouTube Shorts, Instagram Reels and HackerNoon, with a live dashboard for members.",
+      "tag": {
+        "text": "Members · soft launch",
+        "kind": "warn"
+      },
+      "app": "trends",
+      "member": {
+        "path": "/trends/app/",
+        "label": "Live dashboard"
+      },
+      "keywords": "reels shorts tiktok instagram youtube hashtags hooks formats content research social media analytics creators premium membership"
+    },
+    {
       "title": "Flipper Zero emulator",
       "path": "/flipperzero/",
       "group": "projects",
