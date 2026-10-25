@@ -233,7 +233,7 @@
       "title": "Trends",
       "path": "/trends/",
       "group": "projects",
-      "desc": "Short-form video trends across DataRail's niches, collected from YouTube Shorts, Instagram Reels and HackerNoon, with a live dashboard for members.",
+      "desc": "Short-form video trends across DataRail's niches, collected from YouTube Shorts and HackerNoon, with a live dashboard for members.",
       "tag": {
         "text": "Members · soft launch",
         "kind": "warn"
@@ -243,7 +243,7 @@
         "path": "/trends/app/",
         "label": "Live dashboard"
       },
-      "keywords": "reels shorts tiktok instagram youtube hashtags hooks formats content research social media analytics creators premium membership"
+      "keywords": "shorts youtube hackernoon hashtags hooks formats content research social media analytics creators premium membership"
     },
     {
       "title": "Flipper Zero emulator",
