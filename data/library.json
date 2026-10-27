@@ -324,6 +324,17 @@
       "keywords": "deskspace desk space workspace room bulletin board corkboard cork pinboard notes sticky notes post it pin knick knacks trinkets collectibles unlock unlockables achievements objectives jobs terminal computer console storage files neon cyberpunk customize customise no account private"
     },
     {
+      "title": "TimeGate",
+      "path": "/library/timegate/",
+      "group": "projects",
+      "desc": "Prepaid time: buy minutes through Stripe or Square, then spend them only while a session runs, on a kiosk device that locks itself or inside a datarail app.",
+      "tag": {
+        "text": "In development",
+        "kind": "warn"
+      },
+      "keywords": "timegate time gate prepaid minutes pay per minute pay as you go meter metered session kiosk lock locked device rental loan pc tablet stripe square checkout payments webhook ledger flutter windows linux android"
+    },
+    {
       "title": "DataRail Storage",
       "path": "/storage/",
       "group": "projects",
