@@ -105,6 +105,7 @@ main{max-width:1100px;margin:0 auto;padding:20px 16px}
 <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@pdf-lib/fontkit@1.1.1/dist/fontkit.umd.min.js"></script>
+<script src="/library/textswap/scrub.js"></script>
 <script>
 "use strict";
 const CDN = 'https://cdn.jsdelivr.net/npm/';
@@ -624,20 +625,87 @@ async function download(){
   if (!doc) return;
   status('Saving…');
   try {
-    let blob, ext;
+    let blob, ext, left = 0;
     if (doc.kind === 'image'){
       const jpg = /jpe?g/i.test(doc.mime); ext = jpg ? 'jpg' : 'png';
       blob = await new Promise(r => doc.pages[0].view.toBlob(r, jpg ? 'image/jpeg' : 'image/png', 0.95));
-    } else { blob = new Blob([await buildPdf()], {type: 'application/pdf'}); ext = 'pdf'; }
+    } else { const r = await savePdf(); blob = new Blob([r.bytes], {type: 'application/pdf'}); ext = 'pdf'; left = r.left; }
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `${doc.name}-edited.${ext}`; a.click();
     setTimeout(() => URL.revokeObjectURL(a.href), 5000);
-    status('Saved');
+    status(left ? `Saved — but ${left} edit${left > 1 ? 's' : ''} only cover${left > 1 ? '' : 's'} the old text, which is still in the file` : 'Saved');
   } catch(e){ console.error(e); status('Save failed: ' + e.message); }
 }
-async function buildPdf(){
+
+// build, read the result back, and rebuild once with anything that did not come out clean covered instead
+async function savePdf(){
+  let r = await buildPdf(new Set());
+  const bad = await leftovers(r.bytes, r.claims);
+  if (bad.size) r = await buildPdf(bad);
+  return {bytes: r.bytes, left: r.left.size};
+}
+
+// a pdf.js text item as the area scrub.js clears, in PDF user space
+const regionOf = it => { const t = it.transform;
+  return {ox: t[4], oy: t[5], w: it.width, size: Math.hypot(t[2], t[3]), dir: Math.sign(t[0]) || 1, up: Math.sign(t[3]) || 1}; };
+async function textRuns(pg){
+  if (!pg.runs){
+    const ol = await pg.pp.getOperatorList({annotationMode: pdfjsLib.AnnotationMode.DISABLE});
+    pg.runs = ol.argsArray.filter((a, i) => ol.fnArray[i] === pdfjsLib.OPS.showText).map(a => a[0]);
+  }
+  return pg.runs;
+}
+// map a canvas rectangle to a PDF matrix (unit square → rectangle), works for rotated pages too
+function rectCM(vp, r){ const O = vp.convertToPdfPoint(r.x, r.y + r.h), A = vp.convertToPdfPoint(r.x + r.w, r.y + r.h), B = vp.convertToPdfPoint(r.x, r.y);
+  return [A[0]-O[0], A[1]-O[1], B[0]-O[0], B[1]-O[1], O[0], O[1]]; }
+
+// a page that is only pictures (a scan): the pictures, with the edits painted in, become one image at their own resolution
+async function backdrop(out, op, pg, density, covers){
+  const v1 = pg.pp.getViewport({scale: 1}), k = Math.min(density || pg.S, 4200/Math.max(v1.width, v1.height));
+  const vp = pg.pp.getViewport({scale: k}), c = mkCanvas(vp.width, vp.height), cx = c.getContext('2d', {willReadFrequently: true});
+  await pg.pp.render({canvasContext: cx, viewport: vp, annotationMode: pdfjsLib.AnnotationMode.DISABLE}).promise;
+  const f = c.width/pg.base.width, sc = r => ({x: Math.floor(r.x*f), y: Math.floor(r.y*f), w: Math.ceil(r.w*f), h: Math.ceil(r.h*f)});
+  for (const e of pg.edits){
+    if (e.type === 'raster') drawRaster(cx, {...e, x: e.x*f, baseline: e.baseline*f, fontPx: e.fontPx*f, erase: e.erase && sc(e.erase)});
+    else if (covers.has(e)){ const r = sc(e.cover); cx.fillStyle = hex(e.bg); cx.fillRect(r.x, r.y, r.w, r.h); }
+  }
+  const img = await out.embedJpg(await (await new Promise(r => c.toBlob(r, 'image/jpeg', 0.92))).arrayBuffer());
+  const name = op.node.newXObject('Image', img.ref).asString(), m = rectCM(vp, {x: 0, y: 0, w: c.width, h: c.height});
+  op.node.Contents().insert(0, out.context.register(out.context.flateStream(new TextEncoder().encode(`q ${m.map(TextScrub.fmt).join(' ')} cm ${name} Do Q`))));
+}
+
+// read the saved file back: no old text where an edit took it out, and a flattened page draws just its one image
+async function leftovers(bytes, claims){
+  // spaces in a re-embedded original font can read back as U+0000, so compare without spacing of any kind
+  const bad = new Set(), O = pdfjsLib.OPS, norm = s => s.normalize('NFKC').replace(/[\s\u0000-\u001f]+/g, '');
+  const IMG = [O.paintImageXObject, O.paintImageXObjectRepeat, O.paintInlineImageXObject, O.paintInlineImageXObjectGroup,
+    O.paintImageMaskXObject, O.paintImageMaskXObjectGroup, O.paintImageMaskXObjectRepeat, O.paintSolidColorImageMask];
+  const pdf = await pdfjsLib.getDocument({data: bytes.slice(), isEvalSupported: false}).promise;
+  try {
+    for (const pg of new Set(claims.map(c => c.pg))){
+      const p = await pdf.getPage(pg.idx + 1), items = (await p.getTextContent()).items.filter(i => i.str.trim());
+      // new text can read back split into words, so any piece of it counts as new
+      const fresh = pg.edits.map(e => norm(e.text)), isNew = s => fresh.some(f => f.includes(norm(s)));
+      for (const c of claims.filter(c => c.pg === pg)){
+        if (c.flat){
+          const ol = await p.getOperatorList({annotationMode: pdfjsLib.AnnotationMode.DISABLE});
+          if (ol.fnArray.filter(f => IMG.includes(f)).length !== 1) pg.edits.forEach(e => bad.add(e));
+          continue;
+        }
+        const g = regionOf(c.e.box.item);
+        if (items.some(i => { const t = i.transform, a0 = (t[4] - g.ox)*g.dir;
+          return Math.abs(t[1]) < 1e-3 && Math.sign(t[0]) === g.dir && Math.abs((t[5] - g.oy)*g.up) < 0.3*g.size && !isNew(i.str)
+            && Math.min(a0 + i.width, g.w) - Math.max(a0, 0) > 0.2*g.size; })) bad.add(c.e);
+      }
+    }
+  } finally { await pdf.destroy(); }
+  return bad;
+}
+
+// keep: edits that are covered as before instead of taken out
+async function buildPdf(keep){
   const P = PDFLib, out = await P.PDFDocument.load(doc.bytes, {ignoreEncryption: true});
   out.registerFontkit(fontkit);
-  const embedded = new Map();
+  const embedded = new Map(), claims = [], flats = [], left = new Set(), locked = !!out.context.trailerInfo.Encrypt;
   const pdfFont = async cand => {
     const key = cand.emb ? cand.css : cand.css;
     if (!embedded.has(key)){
@@ -651,28 +719,58 @@ async function buildPdf(){
   for (const pg of doc.pages){
     if (!pg.edits.length) continue;
     const op = pages[pg.idx], vp = pg.viewport;
-    const toPdf = (x, y) => vp.convertToPdfPoint(x, y);
-    // map a canvas rectangle to a PDF matrix (unit square → rectangle), works for rotated pages too
-    const rectCM = r => { const O = toPdf(r.x, r.y + r.h), A = toPdf(r.x + r.w, r.y + r.h), B = toPdf(r.x, r.y);
-      return [A[0]-O[0], A[1]-O[1], B[0]-O[0], B[1]-O[1], O[0], O[1]]; };
     const withCM = (m, fn) => { op.pushOperators(P.pushGraphicsState(), P.concatTransformationMatrix(...m)); fn(); op.pushOperators(P.popGraphicsState()); };
-    // raster edits: snapshot the final pixels of each touched area
+    // take the old text out of the page itself (scrub.js). A page that is only pictures has the
+    // edited pixels too, so it is flattened; on any other page a picture edit can only be covered.
+    const vec = pg.edits.filter(e => e.type === 'vector' && !keep.has(e)), regions = vec.map(e => regionOf(e.box.item));
+    let st = null, flat = false;
+    if (!locked) try {
+      const runs = await textRuns(pg);
+      st = TextScrub.walk(out, pg.idx, runs, regions);
+      flat = st.images > 0 && !st.visibleText && !st.paths && !pg.edits.some(e => keep.has(e))
+        && (pg.edits.some(e => e.type === 'raster') || st.regions.some(x => x.hidden));
+      st = TextScrub.walk(out, pg.idx, runs, regions, {commit: true, scrubImages: flat});
+    } catch(err){ console.warn(`page ${pg.idx + 1}: old text left in place, covered instead`, err); st = null; flat = false; }
+    const found = e => st && vec.includes(e) ? st.regions[vec.indexOf(e)] : null;
+    if (flat) await backdrop(out, op, pg, st.density, new Set(vec.filter(e => found(e).hidden)));
     for (const e of pg.edits){
       if (e.type === 'vector'){
-        const c = e.bg.map(v => v/255), t = e.color.map(v => v/255);
-        withCM(rectCM(e.cover), () => op.drawRectangle({x:0, y:0, width:1, height:1, color: P.rgb(...c), borderWidth: 0}));
+        const x = found(e), c = e.bg.map(v => v/255), t = e.color.map(v => v/255);
+        // covered as before when the text could not be taken out, or when it was a scan's invisible
+        // text layer and the picture underneath, not flattened, still shows the old words
+        if (!x || !x.glyphs || (x.hidden && !flat)){
+          withCM(rectCM(vp, e.cover), () => op.drawRectangle({x:0, y:0, width:1, height:1, color: P.rgb(...c), borderWidth: 0}));
+          left.add(e);
+        }
+        if (x && x.glyphs) claims.push({pg, e});
         const font = await pdfFont(e.cand), tm = e.tm, s = e.cand.skew;
-        withCM([tm[0]*e.hs, tm[1]*e.hs, tm[0]*s + tm[2], tm[1]*s + tm[3], tm[4], tm[5]], () =>
-          op.drawText(e.text, {x: 0, y: 0, size: 1, font, color: P.rgb(...t)}));
-      } else {
+        // a font cut down to one document's glyphs often has no space (Chrome places words one by one):
+        // set the words apart by the space the preview showed, instead of drawing the missing-glyph box
+        const words = e.cand.emb && !e.cand.fk.hasGlyphForCodePoint(32) ? e.text.split(' ') : [e.text];
+        const mc = mkCanvas(1, 1).getContext('2d'); mc.font = `100px "${e.cand.css}"`;
+        const space = mc.measureText(' ').width/100;
+        withCM([tm[0]*e.hs, tm[1]*e.hs, tm[0]*s + tm[2], tm[1]*s + tm[3], tm[4], tm[5]], () => {
+          let at = 0;
+          for (const w of words){ if (w) op.drawText(w, {x: at, y: 0, size: 1, font, color: P.rgb(...t)}); at += font.widthOfTextAtSize(w, 1) + space; }
+        });
+      } else if (!flat){
+        // raster edits: snapshot the final pixels of each touched area
         const r = e.patch, c = mkCanvas(r.w, r.h);
         c.getContext('2d').drawImage(pg.view, r.x, r.y, r.w, r.h, 0, 0, r.w, r.h);
         const png = await out.embedPng(await (await new Promise(res => c.toBlob(res, 'image/png'))).arrayBuffer());
-        withCM(rectCM(r), () => op.drawImage(png, {x:0, y:0, width:1, height:1}));
+        withCM(rectCM(vp, r), () => op.drawImage(png, {x:0, y:0, width:1, height:1}));
+        left.add(e);
       }
     }
+    if (flat){
+      claims.push({pg, flat: true});
+      flats.push({refs: st.scrubbed, edits: pg.edits.filter(e => e.type === 'raster' || found(e).hidden)});
+    }
   }
-  return out.save();
+  TextScrub.prune(out.context);
+  // an old picture that something else still uses stays in the file, and the old words with it
+  for (const f of flats) if (f.refs.some(r => out.context.lookup(r))) f.edits.forEach(e => left.add(e));
+  return {bytes: await out.save(), claims, left};
 }
 </script>
 <script src="/assets/circuit.js" defer></script>
