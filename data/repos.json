@@ -36,6 +36,10 @@
     {
       "repo": "fvtale/nypizza",
       "entry": "/NYPizza/"
+    },
+    {
+      "repo": "fvtale/datarail-gemini",
+      "entry": "/Gemini/"
     }
   ]
 }

@@ -303,6 +303,16 @@
       "keywords": "ghostsignal ghost signal audio game spatial binaural treasure hunt meta ray-ban glasses smartspecs wearables bryant park nyc ai hush pirate radio 93.3 halloween music soundtrack dead channel"
     },
     {
+      "title": "Gemini",
+      "path": "/Gemini/",
+      "group": "projects",
+      "desc": "Hello world, drawn as twin circuit traces: one signal splits in two and writes both words letter for letter in lockstep, under the stars of Gemini.",
+      "tag": {
+        "text": "Hello world"
+      },
+      "keywords": "gemini twins castor pollux constellation stars hello world helloworld animation animated circuit trace pcb board"
+    },
+    {
       "title": "DataRail Storage",
       "path": "/storage/",
       "group": "projects",
