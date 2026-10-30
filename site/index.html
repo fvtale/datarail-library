@@ -432,5 +432,9 @@ mark {
 </script>
 <script type="module" src="js/main.js"></script>
 <script src="/assets/circuit.js" defer></script>
+<!-- Tells DeskSpace that this browser has been to the Library, which unlocks
+     the overdue library card on the desk. One localStorage key, nothing sent
+     anywhere. The contract is docs/objectives.md in fvtale/datarail-deskspace. -->
+<script src="/DeskSpace/beacon.js" data-objective="library.visit" defer></script>
 </body>
 </html>
