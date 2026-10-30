@@ -40,6 +40,10 @@
     {
       "repo": "fvtale/datarail-gemini",
       "entry": "/Gemini/"
+    },
+    {
+      "repo": "fvtale/datarail-deskspace",
+      "entry": "/DeskSpace/"
     }
   ]
 }

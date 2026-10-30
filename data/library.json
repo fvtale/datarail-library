@@ -313,6 +313,17 @@
       "keywords": "gemini twins castor pollux constellation stars hello world helloworld animation animated circuit trace pcb board"
     },
     {
+      "title": "DeskSpace",
+      "path": "/DeskSpace/",
+      "group": "projects",
+      "desc": "A desk you set up yourself: a bulletin board that keeps your notes, knick-knacks you unlock by doing things around datarail.org, and a computer that plugs into your storage.",
+      "tag": {
+        "text": "Runs in browser",
+        "kind": "live"
+      },
+      "keywords": "deskspace desk space workspace room bulletin board corkboard cork pinboard notes sticky notes post it pin knick knacks trinkets collectibles unlock unlockables achievements objectives jobs terminal computer console storage files neon cyberpunk customize customise no account private"
+    },
+    {
       "title": "DataRail Storage",
       "path": "/storage/",
       "group": "projects",
