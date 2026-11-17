@@ -364,7 +364,7 @@
     },
     {
       "title": "Which 23rd?",
-      "path": "/which-23rd/",
+      "path": "/which23rd/",
       "group": "projects",
       "desc": "Five Manhattan subway stations are all named 23 St. Pick where you're headed in NoMad or Chelsea and it names the one to get off at, the walk, and what the wrong one costs.",
       "tag": {
