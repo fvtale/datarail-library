@@ -335,6 +335,17 @@
       "keywords": "timegate time gate prepaid minutes pay per minute pay as you go meter metered session kiosk lock locked device rental loan pc tablet stripe square checkout payments webhook ledger flutter windows linux android"
     },
     {
+      "title": "GlassesGate Zones",
+      "path": "/library/zones/",
+      "group": "projects",
+      "desc": "A proposed room sensor for AI glasses: it tells a security team whether a pair it did not approve is in a controlled space, alongside wearers it enrolled through GlassesGate.",
+      "tag": {
+        "text": "Proposal",
+        "kind": "warn"
+      },
+      "keywords": "glassesgate zones ai glasses smart glasses meta ray-ban wearables camera recording security ciso controlled room restricted zone policy bluetooth ble sensor detection allowlist approved wearer enrollment beacon privacy shadow ai dlp"
+    },
+    {
       "title": "DataRail Storage",
       "path": "/storage/",
       "group": "projects",
