@@ -346,6 +346,23 @@
       "keywords": "glassesgate zones ai glasses smart glasses meta ray-ban wearables camera recording security ciso controlled room restricted zone policy bluetooth ble sensor detection allowlist approved wearer enrollment beacon privacy shadow ai dlp"
     },
     {
+      "title": "Microboard",
+      "path": "/Manhattan/",
+      "group": "projects",
+      "desc": "A miniature 3D Manhattan with live subway trains, city data filters and a message board pinned to the map.",
+      "tag": {
+        "text": "Live data",
+        "kind": "live"
+      },
+      "sub": [
+        {
+          "label": "Open the model",
+          "path": "/Microboard/"
+        }
+      ],
+      "keywords": "microboard manhattan nyc new york city 3d model miniature map subway mta trains live real time message board pins buildings terrain x-ray heat traffic weather sky air quality fire crime network wifi linknyc citi bike jukebox three.js"
+    },
+    {
       "title": "DataRail Storage",
       "path": "/storage/",
       "group": "projects",
