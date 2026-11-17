@@ -44,6 +44,10 @@
     {
       "repo": "fvtale/datarail-deskspace",
       "entry": "/DeskSpace/"
+    },
+    {
+      "repo": "fvtale/datarail-which-23rd",
+      "entry": "/which23rd/"
     }
   ]
 }
