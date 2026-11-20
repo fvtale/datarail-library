@@ -241,20 +241,20 @@
       "keywords": "pdf image jpg png photo scan edit text replace change words font match matching editor ocr free offline private"
     },
     {
-      "title": "Trends",
-      "path": "/trends/",
+      "title": "Harvest",
+      "path": "/harvest/",
       "group": "projects",
-      "desc": "Short-form video trends across DataRail's niches, collected from YouTube Shorts and HackerNoon, with a live dashboard for members.",
+      "desc": "Collects what is moving across DataRail's niches from official sources, starting with short-form video trends from YouTube Shorts and HackerNoon, with a live dashboard for members.",
       "tag": {
         "text": "Members · soft launch",
         "kind": "warn"
       },
-      "app": "trends",
+      "app": "harvest",
       "member": {
-        "path": "/trends/app/",
+        "path": "/harvest/app/",
         "label": "Live dashboard"
       },
-      "keywords": "shorts youtube hackernoon hashtags hooks formats content research social media analytics creators premium membership"
+      "keywords": "trends shorts youtube hackernoon hashtags hooks formats content research social media analytics creators collector premium membership"
     },
     {
       "title": "Flipper Zero emulator",
