@@ -386,6 +386,22 @@
       "keywords": "files storage upload download account sign in login invite api key scoped private folders vps"
     },
     {
+      "title": "Datarail Advertising",
+      "path": "/advertising/",
+      "group": "projects",
+      "desc": "A New York agency making ads from first-person footage shot on camera glasses and phones, with a clip maker for invited clients.",
+      "tag": {
+        "text": "Invite only",
+        "kind": "warn"
+      },
+      "app": "advertising",
+      "member": {
+        "path": "/advertising/#studio",
+        "label": "Clip maker"
+      },
+      "keywords": "advertising ad agency pov first person point of view meta glasses camera glasses video editing reels shorts tiktok clips spec ads nyc"
+    },
+    {
       "title": "Go2 Scaler",
       "path": "/scaler/",
       "group": "premium",
