@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>TimeGate — prepaid time for devices and datarail services</title>
-<meta name="description" content="TimeGate is DataRail's prepaid time system: pay through Stripe or Square, then spend minutes only while a session runs, on a locked kiosk device or inside a datarail app. How it works, what it is for, and what it is built from.">
+<meta name="description" content="TimeGate is DataRail's prepaid time system: pay through Stripe or Square, then spend minutes only while a session runs, on a locked kiosk device or inside a datarail app. How it works, what it is for, what it is built from, and how it tunes itself for a Legion Go, a Surface and a PS5 running Linux.">
 <meta name="color-scheme" content="dark">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://datarail.org/library/timegate/">
@@ -310,10 +310,35 @@ section > .shell > .intro { margin: 14px 0 0; max-width: 66ch; color: var(--mute
 .footer-inner a:hover { color: var(--accent); }
 .footer-note { width: 100%; margin: 10px 0 0; font-size: 0.79rem; color: var(--dim); max-width: 78ch; }
 
+/* ---------- Devices ---------- */
+.s-violet { stroke: var(--violet); }
+/* The diagnostics strip: a soft highlight sweeps across the checks. */
+.g-scan { animation: g-scan 5s ease-in-out infinite; }
+@keyframes g-scan { 0% { transform: translateX(0); } 50% { transform: translateX(735px); } 100% { transform: translateX(0); } }
+.note--warn { border-left-color: var(--magenta); }
+.note strong { color: var(--fg); }
+.device-shots {
+  display: grid; gap: 18px; margin-top: 26px;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); align-items: start;
+}
+.device-shots .tall { grid-row: span 2; }
+.device-shots figure { margin: 0; }
+.device-shots img {
+  display: block; width: 100%; height: auto; border-radius: 10px;
+  border: 1px solid var(--line-strong);
+  box-shadow: 0 0 0 1px rgba(66, 245, 255, 0.06), 0 18px 48px rgba(0, 0, 0, 0.55);
+}
+.device-shots figcaption { margin-top: 10px; color: var(--dim); font-size: 0.84rem; }
+.device-shots figcaption b { color: var(--fg); font-weight: 600; }
+@media (max-width: 760px) {
+  .device-shots { grid-template-columns: minmax(0, 1fr); }
+  .device-shots .tall { grid-row: auto; max-width: 320px; }
+}
+
 /* Under reduced motion the trains and blooms stop; the drawing stays. */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
-  .g-pulse, .g-core-glow { display: none; }
+  .g-pulse, .g-core-glow, .g-scan { display: none; }
 }
 </style>
 </head>
@@ -329,6 +354,7 @@ section > .shell > .intro { margin: 14px 0 0; max-width: 66ch; color: var(--mute
     </a>
     <nav class="header-nav" aria-label="On this page">
       <a href="#how">How it works</a>
+      <a class="opt" href="#devices">Devices</a>
       <a class="opt" href="#uses">Use cases</a>
       <a class="opt" href="#specs">Specs</a>
       <a href="/library/">Library</a>
@@ -346,7 +372,8 @@ section > .shell > .intro { margin: 14px 0 0; max-width: 66ch; color: var(--mute
         Square and the minutes land on their account. They spend them on a <em>device</em> that
         stays locked until someone starts a session on it, or inside a <em>datarail service</em>
         that only answers during a paid session. An admin sets what a minute costs, and the server,
-        not the device, keeps the time.
+        not the device, keeps the time. It tunes itself to the hardware it runs on, from a Legion
+        Go to a Surface to a PS5 on the TV.
       </p>
       <div class="hero-actions">
         <a class="btn" href="#how">How it works</a>
@@ -397,7 +424,7 @@ section > .shell > .intro { margin: 14px 0 0; max-width: 66ch; color: var(--mute
         <!-- ====================== Wide drawing (desktop, tablet) ====================== -->
         <svg class="diagram diagram--wide" viewBox="0 0 1000 640" role="img" aria-labelledby="dgW-title dgW-desc">
           <title id="dgW-title">How TimeGate turns a payment into an open gate</title>
-          <desc id="dgW-desc">A buyer picks a package quoted by the server, five dollars for thirty minutes. They pay on Stripe's or Square's hosted checkout, where card details stay. The processor sends a signed webhook to the TimeGate server, which verifies it, credits the minutes once to an append-only ledger, and meters sessions on its own clock. The browser returning from checkout never adds time. The server then opens one of two gates: a device gate, where a Windows, Linux or Android kiosk unlocks and locks again when time stops, or a service gate, where a datarail app such as Trends or GhostSignal lets the person in only during a paid session. Below, one session on the meter: the device checks in every thirty seconds, the session is billed from start to the last check-in, and if the device goes silent its ninety-second lease runs out and it locks itself, so the silence is never billed.</desc>
+          <desc id="dgW-desc">A buyer picks a package quoted by the server, five dollars for thirty minutes. They pay on Stripe's or Square's hosted checkout, where card details stay. The processor sends a signed webhook to the TimeGate server, which verifies it, credits the minutes once to an append-only ledger, and meters sessions on its own clock. The browser returning from checkout never adds time. The server then opens one of two gates: a device gate, where a Windows, Linux or Android kiosk unlocks and locks again when time stops, or a service gate, where a datarail app such as Harvest or GhostSignal lets the person in only during a paid session. Below, one session on the meter: the device checks in every thirty seconds, the session is billed from start to the last check-in, and if the device goes silent its ninety-second lease runs out and it locks itself, so the silence is never billed.</desc>
 
           <!-- Stage labels -->
           <text class="g-mono" x="85" y="34" text-anchor="middle">01 · PAY</text>
@@ -494,7 +521,7 @@ section > .shell > .intro { margin: 14px 0 0; max-width: 66ch; color: var(--mute
           <circle cx="947" cy="239.5" r="1" class="f-green"/><circle cx="951" cy="239.5" r="1" class="f-green"/>
           <path class="g-icon s-green" d="M950 252 L955 257 L968 247" stroke-width="1.6"/>
           <text class="g-title-sm" x="796" y="278">An app lets you in</text>
-          <text class="g-mono-sm" x="796" y="298">TRENDS · GHOSTSIGNAL · …</text>
+          <text class="g-mono-sm" x="796" y="298">HARVEST · GHOSTSIGNAL · …</text>
           <text class="g-small" x="796" y="320">only inside a paid session</text>
 
           <!-- The meter: one session -->
@@ -627,7 +654,7 @@ section > .shell > .intro { margin: 14px 0 0; max-width: 66ch; color: var(--mute
           <path class="g-icon" d="M298 698 H328"/>
           <path class="g-icon s-green" d="M305 706 L309 710 L320 702" stroke-width="1.5"/>
           <text class="g-title-sm" x="202" y="734" style="font-size:13.5px">An app lets you in</text>
-          <text class="g-mono-sm" x="202" y="756">TRENDS ·</text>
+          <text class="g-mono-sm" x="202" y="756">HARVEST ·</text>
           <text class="g-mono-sm" x="202" y="770">GHOSTSIGNAL · …</text>
           <text class="g-small" x="202" y="794">only inside a</text>
           <text class="g-small" x="202" y="810">paid session</text>
@@ -698,7 +725,7 @@ section > .shell > .intro { margin: 14px 0 0; max-width: 66ch; color: var(--mute
           <span class="kicker">Service gate</span>
           <h3>A datarail app that answers only while you're paid up</h3>
           <p>
-            A datarail service, named by the same app id the Library uses (Trends, GhostSignal, and
+            A datarail service, named by the same app id the Library uses (Harvest, GhostSignal, and
             so on), asks TimeGate before it answers. The person's app carries a
             <strong>gate token</strong> for the running session; the service checks it with its own
             credential and gets back yes or no, and how much time is left.
@@ -709,6 +736,270 @@ section > .shell > .intro { margin: 14px 0 0; max-width: 66ch; color: var(--mute
           </p>
         </article>
       </div>
+    </div>
+  </section>
+
+  <div class="rail-divider" aria-hidden="true">
+    <i class="rd-node"></i><i class="rd-node"></i><i class="rd-node"></i><i class="rd-node"></i>
+  </div>
+
+  <section id="devices" aria-labelledby="devices-title">
+    <div class="shell">
+      <span class="label">Devices</span>
+      <h2 id="devices-title">Tuned for the hardware it runs on</h2>
+      <p class="intro">
+        The same app sizes, steers and animates itself differently on a handheld, a tablet and a
+        TV across the room. Settings → Device picks the profile, or reads it from the machine's own
+        model string, and a diagnostics check tests the device against it.
+      </p>
+
+      <figure class="figure">
+        <svg class="diagram diagram--wide" viewBox="0 0 1000 580" role="img" aria-labelledby="dvW-title dvW-desc">
+          <title id="dvW-title">TimeGate's device profiles and diagnostics</title>
+          <desc id="dvW-desc">Three devices and how TimeGate tunes itself for each. Legion Go and Legion Go 2: an 8.8-inch 144 hertz handheld; the interface is 1.15 times larger, controls are 56 pixels, input is touch and the detachable controllers, and the background rails are held still to save battery. Surface Pro: a 13-inch 3 by 2 tablet; normal scale, 52 pixel controls for fingers, touch, pen and keyboard, animated rails. A PS5 running Linux on a 1080p TV: a 5 percent margin for TVs that crop the picture, the app laid out 1080 pixels wide so body text is 24 pixels or 2.2 percent of the picture height, a DualSense over USB, and the rails off. Below, the diagnostics check in Settings: profile, screen, text size, controllers, drawing speed, storage, server and device gate.</desc>
+          
+          <!-- legion -->
+          <rect class="g-node" x="10" y="40" width="310" height="330" rx="12"/>
+          <path d="M23 41 H307" class="g-trace s-time" stroke-width="2"/>
+          <text class="g-mono f-time" x="28" y="68">LEGION GO · GO 2</text>
+          <g>
+            <rect class="g-icon" x="99" y="96" width="132" height="84" rx="6"/>
+            <rect x="105" y="102" width="120" height="72" rx="3" fill="#10151e"/>
+            <text class="g-fig f-time" x="165" y="144" text-anchor="middle" style="font-size:17px">1:29:00</text>
+            <rect class="g-icon s-time" x="65" y="92" width="32" height="92" rx="14"/>
+            <circle class="g-icon" cx="81" cy="116" r="7"/>
+            <path class="g-icon" d="M81 146 v14 M74 153 h14"/>
+            <rect class="g-icon s-time" x="233" y="92" width="32" height="92" rx="14"/>
+            <circle cx="249" cy="108" r="2.6" class="f-time"/><circle cx="249" cy="122" r="2.6" class="f-dim"/>
+            <circle cx="242" cy="115" r="2.6" class="f-dim"/><circle cx="256" cy="115" r="2.6" class="f-dim"/>
+            <circle class="g-icon" cx="249" cy="154" r="7"/>
+          </g>
+            <text class="g-mono-sm" x="28" y="230">SCREEN</text>
+            <text class="g-small" x="114" y="230" style="fill:var(--fg)">8.8 in · 144 Hz</text>
+            <text class="g-mono-sm" x="28" y="258">SCALE</text>
+            <text class="g-small" x="114" y="258" style="fill:var(--fg)">1.15× interface</text>
+            <text class="g-mono-sm" x="28" y="286">CONTROLS</text>
+            <text class="g-small" x="114" y="286" style="fill:var(--fg)">56 px, 64 on screen</text>
+            <text class="g-mono-sm" x="28" y="314">INPUT</text>
+            <text class="g-small" x="114" y="314" style="fill:var(--fg)">touch and controllers</text>
+            <text class="g-mono-sm" x="28" y="342">RAILS</text>
+            <text class="g-small" x="114" y="342" style="fill:var(--fg)">held still on battery</text>
+        
+          <!-- surface -->
+          <rect class="g-node" x="345" y="40" width="310" height="330" rx="12"/>
+          <path d="M358 41 H642" class="g-trace s-violet" stroke-width="2"/>
+          <text class="g-mono f-violet" x="363" y="68">SURFACE PRO</text>
+          <g>
+            <rect class="g-icon" x="431" y="92" width="138" height="92" rx="7"/>
+            <rect x="437" y="98" width="126" height="80" rx="3" fill="#10151e"/>
+            <path class="g-icon s-violet" d="M450 118 h56 M450 132 h84 M450 146 h70" stroke-opacity="0.7"/>
+            <path class="g-icon s-violet" d="M586 90 V172 l-4 10 l-4 -10 V90 z"/>
+            <rect class="g-icon" x="431" y="192" width="138" height="12" rx="3" stroke-dasharray="4 4"/>
+          </g>
+            <text class="g-mono-sm" x="363" y="230">SCREEN</text>
+            <text class="g-small" x="449" y="230" style="fill:var(--fg)">13 in · 3:2</text>
+            <text class="g-mono-sm" x="363" y="258">SCALE</text>
+            <text class="g-small" x="449" y="258" style="fill:var(--fg)">1× interface</text>
+            <text class="g-mono-sm" x="363" y="286">CONTROLS</text>
+            <text class="g-small" x="449" y="286" style="fill:var(--fg)">52 px for fingers</text>
+            <text class="g-mono-sm" x="363" y="314">INPUT</text>
+            <text class="g-small" x="449" y="314" style="fill:var(--fg)">touch, pen, keyboard</text>
+            <text class="g-mono-sm" x="363" y="342">RAILS</text>
+            <text class="g-small" x="449" y="342" style="fill:var(--fg)">animated</text>
+        
+          <!-- ps5 -->
+          <rect class="g-node" x="680" y="40" width="310" height="330" rx="12"/>
+          <path d="M693 41 H977" class="g-trace s-mag" stroke-width="2"/>
+          <text class="g-mono f-mag" x="698" y="68">PS5 · LINUX · TV</text>
+          <g>
+            <rect class="g-icon" x="743" y="90" width="144" height="82" rx="4"/>
+            <rect x="748" y="95" width="134" height="72" rx="2" fill="#10151e"/>
+            <rect class="g-icon s-mag" x="755" y="99" width="120" height="64" rx="2" stroke-dasharray="3 4" stroke-opacity="0.7"/>
+            <path class="g-icon" d="M815 172 v8 M797 180 h36"/>
+            <path class="g-icon s-mag" d="M901 94 q14 0 14 14 v58 q0 10 -14 10 z"/>
+            <path class="g-icon" d="M905 106 v58" stroke-opacity="0.6"/>
+            <path class="g-icon s-mag" d="M829 192 q0 -8 10 -8 h20 q10 0 10 8 l4 10 q1 5 -4 5 q-4 0 -7 -5 h-26 q-3 5 -7 5 q-5 0 -4 -5 z"/>
+            <path class="g-trace t-quiet" d="M865 190 C895 188 909 186 909 176"/>
+          </g>
+            <text class="g-mono-sm" x="698" y="230">SCREEN</text>
+            <text class="g-small" x="784" y="230" style="fill:var(--fg)">1080p TV, 5% margin</text>
+            <text class="g-mono-sm" x="698" y="258">SCALE</text>
+            <text class="g-small" x="784" y="258" style="fill:var(--fg)">laid out 1080 px wide</text>
+            <text class="g-mono-sm" x="698" y="286">TEXT</text>
+            <text class="g-small" x="784" y="286" style="fill:var(--fg)">24 px: 2.2% of picture</text>
+            <text class="g-mono-sm" x="698" y="314">INPUT</text>
+            <text class="g-small" x="784" y="314" style="fill:var(--fg)">DualSense over USB</text>
+            <text class="g-mono-sm" x="698" y="342">RAILS</text>
+            <text class="g-small" x="784" y="342" style="fill:var(--fg)">off</text>
+          <rect class="g-panel" x="10" y="420" width="980" height="150" rx="12"/>
+          <text class="g-mono f-time" x="30" y="448">DIAGNOSTICS · SETTINGS → DEVICE</text>
+          <g class="g-scan"><rect x="30" y="472" width="60" height="24" rx="12" class="f-time" opacity="0.18"/></g>
+          
+            <rect class="g-pill" x="30" y="472" width="79" height="24" rx="12"/>
+            <circle cx="43" cy="484" r="3.5" class="f-green"/>
+            <text class="g-mono-sm" x="53" y="488" style="fill:var(--fg)">PROFILE</text>
+            <rect class="g-pill" x="119" y="472" width="72" height="24" rx="12"/>
+            <circle cx="132" cy="484" r="3.5" class="f-green"/>
+            <text class="g-mono-sm" x="142" y="488" style="fill:var(--fg)">SCREEN</text>
+            <rect class="g-pill" x="201" y="472" width="92" height="24" rx="12"/>
+            <circle cx="214" cy="484" r="3.5" class="f-green"/>
+            <text class="g-mono-sm" x="224" y="488" style="fill:var(--fg)">TEXT SIZE</text>
+            <rect class="g-pill" x="303" y="472" width="106" height="24" rx="12"/>
+            <circle cx="316" cy="484" r="3.5" class="f-green"/>
+            <text class="g-mono-sm" x="326" y="488" style="fill:var(--fg)">CONTROLLERS</text>
+            <rect class="g-pill" x="419" y="472" width="119" height="24" rx="12"/>
+            <circle cx="432" cy="484" r="3.5" class="f-green"/>
+            <text class="g-mono-sm" x="442" y="488" style="fill:var(--fg)">DRAWING SPEED</text>
+            <rect class="g-pill" x="548" y="472" width="79" height="24" rx="12"/>
+            <circle cx="561" cy="484" r="3.5" class="f-green"/>
+            <text class="g-mono-sm" x="571" y="488" style="fill:var(--fg)">STORAGE</text>
+            <rect class="g-pill" x="637" y="472" width="72" height="24" rx="12"/>
+            <circle cx="650" cy="484" r="3.5" class="f-green"/>
+            <text class="g-mono-sm" x="660" y="488" style="fill:var(--fg)">SERVER</text>
+            <rect class="g-pill" x="719" y="472" width="106" height="24" rx="12"/>
+            <circle cx="732" cy="484" r="3.5" class="f-green"/>
+            <text class="g-mono-sm" x="742" y="488" style="fill:var(--fg)">DEVICE GATE</text>
+          <text class="g-legend" x="30" y="530">Three seconds of animated rails measure drawing speed against the screen's frame budget.</text>
+          <text class="g-legend" x="30" y="548">Each check then passes, asks for a look, or fails, with a fix to try.</text>
+        </svg>
+        <svg class="diagram diagram--tall" viewBox="0 0 360 1294" role="img" aria-labelledby="dvT-title dvT-desc">
+          <title id="dvT-title">TimeGate's device profiles and diagnostics</title>
+          <desc id="dvT-desc">Legion Go: 1.15 times larger, 56 pixel controls, controllers, still rails. Surface Pro: normal scale, 52 pixel controls, touch and pen, animated rails. PS5 running Linux on a TV: laid out 1080 pixels wide so text is 2.2 percent of the picture, a 5 percent margin, a DualSense over USB, rails off. Below, the diagnostics check in Settings.</desc>
+          
+          <!-- legion -->
+          <rect class="g-node" x="10" y="10" width="340" height="330" rx="12"/>
+          <path d="M23 11 H337" class="g-trace s-time" stroke-width="2"/>
+          <text class="g-mono f-time" x="28" y="38">LEGION GO · GO 2</text>
+          <g>
+            <rect class="g-icon" x="114" y="66" width="132" height="84" rx="6"/>
+            <rect x="120" y="72" width="120" height="72" rx="3" fill="#10151e"/>
+            <text class="g-fig f-time" x="180" y="114" text-anchor="middle" style="font-size:17px">1:29:00</text>
+            <rect class="g-icon s-time" x="80" y="62" width="32" height="92" rx="14"/>
+            <circle class="g-icon" cx="96" cy="86" r="7"/>
+            <path class="g-icon" d="M96 116 v14 M89 123 h14"/>
+            <rect class="g-icon s-time" x="248" y="62" width="32" height="92" rx="14"/>
+            <circle cx="264" cy="78" r="2.6" class="f-time"/><circle cx="264" cy="92" r="2.6" class="f-dim"/>
+            <circle cx="257" cy="85" r="2.6" class="f-dim"/><circle cx="271" cy="85" r="2.6" class="f-dim"/>
+            <circle class="g-icon" cx="264" cy="124" r="7"/>
+          </g>
+            <text class="g-mono-sm" x="28" y="200">SCREEN</text>
+            <text class="g-small" x="114" y="200" style="fill:var(--fg)">8.8 in · 144 Hz</text>
+            <text class="g-mono-sm" x="28" y="228">SCALE</text>
+            <text class="g-small" x="114" y="228" style="fill:var(--fg)">1.15× interface</text>
+            <text class="g-mono-sm" x="28" y="256">CONTROLS</text>
+            <text class="g-small" x="114" y="256" style="fill:var(--fg)">56 px, 64 on screen</text>
+            <text class="g-mono-sm" x="28" y="284">INPUT</text>
+            <text class="g-small" x="114" y="284" style="fill:var(--fg)">touch and controllers</text>
+            <text class="g-mono-sm" x="28" y="312">RAILS</text>
+            <text class="g-small" x="114" y="312" style="fill:var(--fg)">held still on battery</text>
+        
+          <!-- surface -->
+          <rect class="g-node" x="10" y="360" width="340" height="330" rx="12"/>
+          <path d="M23 361 H337" class="g-trace s-violet" stroke-width="2"/>
+          <text class="g-mono f-violet" x="28" y="388">SURFACE PRO</text>
+          <g>
+            <rect class="g-icon" x="111" y="412" width="138" height="92" rx="7"/>
+            <rect x="117" y="418" width="126" height="80" rx="3" fill="#10151e"/>
+            <path class="g-icon s-violet" d="M130 438 h56 M130 452 h84 M130 466 h70" stroke-opacity="0.7"/>
+            <path class="g-icon s-violet" d="M266 410 V492 l-4 10 l-4 -10 V410 z"/>
+            <rect class="g-icon" x="111" y="512" width="138" height="12" rx="3" stroke-dasharray="4 4"/>
+          </g>
+            <text class="g-mono-sm" x="28" y="550">SCREEN</text>
+            <text class="g-small" x="114" y="550" style="fill:var(--fg)">13 in · 3:2</text>
+            <text class="g-mono-sm" x="28" y="578">SCALE</text>
+            <text class="g-small" x="114" y="578" style="fill:var(--fg)">1× interface</text>
+            <text class="g-mono-sm" x="28" y="606">CONTROLS</text>
+            <text class="g-small" x="114" y="606" style="fill:var(--fg)">52 px for fingers</text>
+            <text class="g-mono-sm" x="28" y="634">INPUT</text>
+            <text class="g-small" x="114" y="634" style="fill:var(--fg)">touch, pen, keyboard</text>
+            <text class="g-mono-sm" x="28" y="662">RAILS</text>
+            <text class="g-small" x="114" y="662" style="fill:var(--fg)">animated</text>
+        
+          <!-- ps5 -->
+          <rect class="g-node" x="10" y="710" width="340" height="330" rx="12"/>
+          <path d="M23 711 H337" class="g-trace s-mag" stroke-width="2"/>
+          <text class="g-mono f-mag" x="28" y="738">PS5 · LINUX · TV</text>
+          <g>
+            <rect class="g-icon" x="88" y="760" width="144" height="82" rx="4"/>
+            <rect x="93" y="765" width="134" height="72" rx="2" fill="#10151e"/>
+            <rect class="g-icon s-mag" x="100" y="769" width="120" height="64" rx="2" stroke-dasharray="3 4" stroke-opacity="0.7"/>
+            <path class="g-icon" d="M160 842 v8 M142 850 h36"/>
+            <path class="g-icon s-mag" d="M246 764 q14 0 14 14 v58 q0 10 -14 10 z"/>
+            <path class="g-icon" d="M250 776 v58" stroke-opacity="0.6"/>
+            <path class="g-icon s-mag" d="M174 862 q0 -8 10 -8 h20 q10 0 10 8 l4 10 q1 5 -4 5 q-4 0 -7 -5 h-26 q-3 5 -7 5 q-5 0 -4 -5 z"/>
+            <path class="g-trace t-quiet" d="M210 860 C240 858 254 856 254 846"/>
+          </g>
+            <text class="g-mono-sm" x="28" y="900">SCREEN</text>
+            <text class="g-small" x="114" y="900" style="fill:var(--fg)">1080p TV, 5% margin</text>
+            <text class="g-mono-sm" x="28" y="928">SCALE</text>
+            <text class="g-small" x="114" y="928" style="fill:var(--fg)">laid out 1080 px wide</text>
+            <text class="g-mono-sm" x="28" y="956">TEXT</text>
+            <text class="g-small" x="114" y="956" style="fill:var(--fg)">24 px: 2.2% of picture</text>
+            <text class="g-mono-sm" x="28" y="984">INPUT</text>
+            <text class="g-small" x="114" y="984" style="fill:var(--fg)">DualSense over USB</text>
+            <text class="g-mono-sm" x="28" y="1012">RAILS</text>
+            <text class="g-small" x="114" y="1012" style="fill:var(--fg)">off</text>
+          <rect class="g-panel" x="10" y="1060" width="340" height="224" rx="12"/>
+          <text class="g-mono-sm f-time" x="30" y="1086">DIAGNOSTICS · SETTINGS → DEVICE</text>
+          
+            <rect class="g-pill" x="30" y="1112" width="79" height="24" rx="12"/>
+            <circle cx="43" cy="1124" r="3.5" class="f-green"/>
+            <text class="g-mono-sm" x="53" y="1128" style="fill:var(--fg)">PROFILE</text>
+            <rect class="g-pill" x="119" y="1112" width="72" height="24" rx="12"/>
+            <circle cx="132" cy="1124" r="3.5" class="f-green"/>
+            <text class="g-mono-sm" x="142" y="1128" style="fill:var(--fg)">SCREEN</text>
+            <rect class="g-pill" x="201" y="1112" width="92" height="24" rx="12"/>
+            <circle cx="214" cy="1124" r="3.5" class="f-green"/>
+            <text class="g-mono-sm" x="224" y="1128" style="fill:var(--fg)">TEXT SIZE</text>
+            <rect class="g-pill" x="30" y="1146" width="106" height="24" rx="12"/>
+            <circle cx="43" cy="1158" r="3.5" class="f-green"/>
+            <text class="g-mono-sm" x="53" y="1162" style="fill:var(--fg)">CONTROLLERS</text>
+            <rect class="g-pill" x="146" y="1146" width="119" height="24" rx="12"/>
+            <circle cx="159" cy="1158" r="3.5" class="f-green"/>
+            <text class="g-mono-sm" x="169" y="1162" style="fill:var(--fg)">DRAWING SPEED</text>
+            <rect class="g-pill" x="30" y="1180" width="79" height="24" rx="12"/>
+            <circle cx="43" cy="1192" r="3.5" class="f-green"/>
+            <text class="g-mono-sm" x="53" y="1196" style="fill:var(--fg)">STORAGE</text>
+            <rect class="g-pill" x="119" y="1180" width="72" height="24" rx="12"/>
+            <circle cx="132" cy="1192" r="3.5" class="f-green"/>
+            <text class="g-mono-sm" x="142" y="1196" style="fill:var(--fg)">SERVER</text>
+            <rect class="g-pill" x="201" y="1180" width="106" height="24" rx="12"/>
+            <circle cx="214" cy="1192" r="3.5" class="f-green"/>
+            <text class="g-mono-sm" x="224" y="1196" style="fill:var(--fg)">DEVICE GATE</text>
+          <text class="g-legend" x="30" y="1234">Measures drawing speed, then each check</text>
+          <text class="g-legend" x="30" y="1252">passes, asks for a look, or fails.</text>
+        </svg>
+        <figcaption>
+          Each profile changes size, input and motion together. With a controller, the D-pad or left
+          stick moves, A selects, B goes back and the bumpers change tab; on a TV, A in a text field
+          opens an on-screen keyboard, so a kiosk can be signed into with only a DualSense.
+        </figcaption>
+      </figure>
+
+      <div class="device-shots">
+        <figure>
+          <img src="device-legion-go.png" width="1280" height="800" loading="lazy" decoding="async"
+               alt="TimeGate on a Legion Go: the meter with a live session at 1:29:00, everything drawn 1.15 times larger, the background rails held still.">
+          <figcaption><b>Legion Go.</b> The meter at 1.15×, with the rails held still to save battery.</figcaption>
+        </figure>
+        <figure class="tall">
+          <img src="device-surface.png" width="960" height="1440" loading="lazy" decoding="async"
+               alt="TimeGate on a Surface Pro in portrait: Settings, Device, with Surface detected from the model string, and the results of a diagnostics run.">
+          <figcaption><b>Surface, upright.</b> Settings → Device, the profile detected from the model string, and a diagnostics run.</figcaption>
+        </figure>
+        <figure>
+          <img src="device-ps5.png" width="1920" height="1080" loading="lazy" decoding="async"
+               alt="TimeGate on a TV from a PS5 running Linux: the kiosk lock screen with an on-screen keyboard open, the W key focused and qw typed.">
+          <figcaption><b>PS5 on a TV.</b> Signing in to a kiosk with only a DualSense, through the on-screen keyboard.</figcaption>
+        </figure>
+      </div>
+
+      <p class="note note--warn">
+        <strong>About the PS5.</strong> Linux runs on a jailbroken PS5 only on firmware 13.60 or
+        older, and restarting the console boots the PS5's own system. So on a PS5 a locked device
+        holds only until someone restarts it; it is best as a member app on the TV and for datarail
+        services. The profiles are tested at each device's screen size, not yet on the hardware.
+      </p>
     </div>
   </section>
 
@@ -735,7 +1026,7 @@ section > .shell > .intro { margin: 14px 0 0; max-width: 66ch; color: var(--mute
         <li style="--s: var(--accent-strong)">
           <span class="num">03 · SERVICE</span>
           <b>Pay as you go, no membership</b>
-          <span>Try a members-only datarail feature, such as the Trends live dashboard, for an hour instead of joining for a month.</span>
+          <span>Try a members-only datarail feature, such as the Harvest live dashboard, for an hour instead of joining for a month.</span>
         </li>
         <li style="--s: var(--amber)">
           <span class="num">04 · SERVICE</span>
@@ -824,9 +1115,10 @@ section > .shell > .intro { margin: 14px 0 0; max-width: 66ch; color: var(--mute
           <h3>App</h3>
           <dl>
             <dt>Toolkit</dt><dd>Flutter</dd>
-            <dt>Platforms</dt><dd>Windows, Linux, Android</dd>
+            <dt>Platforms</dt><dd>Windows, Linux, Android, with profiles for the Legion Go, Surface and a PS5 running Linux</dd>
+            <dt>Input</dt><dd>Touch, pen, keyboard and game controllers; an on-screen keyboard for controller-only use</dd>
             <dt>Locking</dt><dd>Android lock task as the device owner; a full-screen kiosk window on desktop</dd>
-            <dt>Tests</dt><dd>15, including the whole kiosk cycle from locked to signed out</dd>
+            <dt>Tests</dt><dd>41, including the whole kiosk cycle and every screen on each device's screen</dd>
           </dl>
         </div>
         <div class="spec-block" style="--block-colour: var(--violet)">
@@ -851,8 +1143,8 @@ section > .shell > .intro { margin: 14px 0 0; max-width: 66ch; color: var(--mute
       <span class="label">Status</span>
       <h2 id="status-title">Where it stands</h2>
       <p class="intro">
-        In development. The server, the app and their tests are built, and it has not taken a real
-        payment yet. Before it does: a full run through each processor's test mode, a refund policy,
+        In development. The server, the app and their tests are built, the app is tuned for the
+        Legion Go, Surface and a PS5 running Linux, and it has not taken a real payment yet. Before it does: a full run through each processor's test mode, a refund policy,
         and a decision on how the Android app is distributed, because Google Play has its own rules
         for selling digital time.
       </p>
