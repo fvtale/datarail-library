@@ -257,6 +257,18 @@
       "keywords": "trends shorts youtube hackernoon hashtags hooks formats content research social media analytics creators collector premium membership"
     },
     {
+      "title": "DataRail SEO",
+      "path": "/SEO/",
+      "group": "projects",
+      "desc": "An agent that audits every datarail.org page each morning and proposes better titles, descriptions, link previews and structured data, each one sent as a pull request for a person to review.",
+      "tag": {
+        "text": "Admins · in development",
+        "kind": "warn"
+      },
+      "app": "seo",
+      "keywords": "seo search engine optimization google search console bing indexnow sitemap robots crawler audit meta description title open graph json-ld structured data canonical alt text traffic agent pull request"
+    },
+    {
       "title": "Flipper Zero emulator",
       "path": "/flipperzero/",
       "group": "projects",
