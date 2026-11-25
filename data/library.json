@@ -397,6 +397,22 @@
       "keywords": "upscaler upscaling scaling fsr frame generation framegen fps boost handheld legion go 2 legion go gen 1 lenovo rog ally ally x asus yoga 9 2-in-1 laptop mouse touchpad video vlc firefox smooth motion film streaming windows app steam games nier integer pixel art oled 120hz membership premium trial"
     },
     {
+      "title": "DataRail Trader",
+      "path": "/trader/",
+      "group": "premium",
+      "desc": "A rebalancing bot that keeps a small ETH, POL and USDC portfolio on Polygon at the mix you choose. Subscribers run it themselves, from a wallet only it uses.",
+      "tag": {
+        "text": "Members · waitlist",
+        "kind": "warn"
+      },
+      "app": "trader",
+      "member": {
+        "path": "/trader/#access",
+        "label": "Get the code"
+      },
+      "keywords": "trader trading bot crypto rebalancing rebalance portfolio polygon matic pol eth ethereum usdc uniswap chainlink metamask wallet defi automated backtest paper trading subscription membership premium"
+    },
+    {
       "title": "DataRail DJ",
       "path": "/DJ/",
       "group": "others",
