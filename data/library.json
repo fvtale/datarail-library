@@ -90,8 +90,8 @@
       "title": "Home",
       "path": "/",
       "group": "datarail",
-      "desc": "The front door. What DataRail is, the live board, and the way into everything else.",
-      "keywords": "index homepage landing front"
+      "desc": "The front door: choose where to start, or close the panel and walk around the live model of New York behind it.",
+      "keywords": "index homepage landing front entry microboard nyc"
     },
     {
       "title": "Consulting",
@@ -357,7 +357,7 @@
       "sub": [
         {
           "label": "Open the model",
-          "path": "/Microboard/"
+          "path": "/NYC/"
         }
       ],
       "keywords": "microboard manhattan nyc new york city 3d model miniature map subway mta trains live real time message board pins buildings terrain x-ray heat traffic weather sky air quality fire crime network wifi linknyc citi bike jukebox three.js"
