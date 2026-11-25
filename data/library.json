@@ -374,6 +374,17 @@
       "keywords": "which 23rd 23 st 23rd street 28 st subway station stop exit mta train line 6 r w f m 1 c e nyc new york manhattan chelsea nomad flatiron madison square park hotel chelsea flower district high line galleries wayfinding walk directions map"
     },
     {
+      "title": "Foundry",
+      "path": "/foundry/",
+      "group": "projects",
+      "desc": "What a GPU or CPU earns mining today, net of power and pool fees, set against renting the same card out by the hour, with a mock pool dashboard.",
+      "tag": {
+        "text": "Simulator",
+        "kind": "warn"
+      },
+      "keywords": "foundry crypto mining pool solo mine pplns hashrate gpu cpu rtx 5070 hearth forge monero xmr ravencoin rvn ergo erg ethereum classic etc kawpow autolykos randomx etchash profitability calculator yield power electricity kwh break even gpu rental compute marketplace inference renders fintech"
+    },
+    {
       "title": "DataRail Storage",
       "path": "/storage/",
       "group": "projects",
